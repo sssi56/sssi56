@@ -1,4 +1,4 @@
-pg_dump -h 172.28.123.16 -U postgres -d cm6 \
+ pg_dump -h 172.28.123.16 -U postgres -d cm6 \
  -t so_department \
  -t department \
  -t SO_Appointment \
