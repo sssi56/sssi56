@@ -1,0 +1,34 @@
+pg_dump -h 172.28.123.16 -U postgres -d cm6 \
+ -t so_department \
+ -t department \
+ -t SO_Appointment \
+ -t so_personsys \
+ -t SO_PostPlain \
+ -t so_postplain_acl \
+ -t SO_Post \
+ -t so_parent \
+ -t SO_Parent_SU \
+ -t SO_StructureUnit \
+ -t so_unit \
+ -t so_orgsystem \
+ -t domain_object_type_id \
+ -t so_appointmentplain \
+ -t so_accessredirectregplace \
+ -t security_stamp \
+ -t so_addressdata_person \
+ -t so_person_hist \
+ -t so_orgdescriptionnonsys \
+ -t so_personnonsysprivate_acl \
+ -t so_orgdescription_hist \
+ -t so_rspost \
+ -t status \
+ -t person_profile \
+ -t so_orgdescription_hist \
+ -t so_person_hist \
+ -t so_posthead \
+ -t so_parent_ph \
+ -t so_appointmenthead \
+ -t so_person \
+ -t person \
+ -F c > dump_department.dump;
+pg_restore -h 172.18.0.2 -U postgres -d cm6 -c -C -v dump_department.dump;

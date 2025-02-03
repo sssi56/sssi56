@@ -1,53 +1,3 @@
-pg_dump -h 172.28.123.16 -U postgres -d cm6 \
- -t so_department \
- -t department \
- -t SO_Appointment \
- -t so_personsys \
- -t SO_PostPlain \
- -t so_postplain_acl \
- -t SO_Post \
- -t so_parent \
- -t SO_Parent_SU \
- -t SO_StructureUnit \
- -t so_unit \
- -t so_orgsystem \
- -t domain_object_type_id \
- -t so_appointmentplain \
- -t so_accessredirectregplace \
- -t security_stamp \
- -t so_addressdata_person \
- -t so_person_hist \
- -t so_orgdescriptionnonsys \
- -t so_personnonsysprivate_acl \
- -t so_orgdescription_hist \
- -t so_rspost \
- -t status \
- -t person_profile \
- -t so_orgdescription_hist \
- -t so_person_hist \
- -t so_posthead \
- -t so_parent_ph \
- -t so_appointmenthead \
- -t so_person \
- -t person \
- -F c > dump_so_department.dump;
-pg_restore -h 172.18.0.2 -U postgres -d cm6 -c -C -v dump_so_department.dump;
-
-psql -h 172.18.0.2 -U postgres -p 5432 -d cm6 -c "CREATE TABLE org_spisok AS
-SELECT so_dep.id,
-       so_su.fullname,
-       so_su.shortname,
-       so_dep.type,
-       hierparent
-FROM so_department so_dep
-INNER JOIN so_structureunit so_su ON so_su.id = so_dep.id
-INNER JOIN so_orgsystem so_org ON so_org.id = so_dep.HierRoot
-WHERE 1 = 1
-  AND so_org.isdeleted = 0
-  AND so_dep.accessredirect IS NULL
-  AND so_dep.hierparent = 2
-ORDER BY so_dep.id ASC;";
-
 psql -h 172.18.0.2 -U postgres -p 5432 -d cm6 -c "CREATE TABLE sotr_spisok_cit AS
 WITH RECURSIVE recursive_data AS (
  				SELECT
@@ -260,7 +210,7 @@ WITH RECURSIVE recursive_data AS (
  				so_per.firstname,
  				so_per.middlename;";
 
-psql -h 172.18.0.2 -U postgres -p 5432 -d cm6 -c "CREATE TABLE result_table AS
+psql -h 172.18.0.2 -U postgres -p 5432 -d cm6 -c "CREATE TABLE result_table_cit AS
 select sotr_spisok.*, person.email
 from sotr_spisok, person
 where sotr_spisok.login = person.login;";
