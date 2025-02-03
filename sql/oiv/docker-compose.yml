@@ -1,16 +1,32 @@
-services:
+version: '3'
 
+networks:
+  custom_network:
+    ipam:
+      config:
+        - subnet: 172.18.0.0/16
+
+services:
   db:
     image: postgres:15
     container_name: postgresql-15
     restart: always
-    shm_size: 128mb
     environment:
+      POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: cm6
+    networks:
+      custom_network:
+        ipv4_address: 172.18.0.2
+    ports:
+      - "5433:5432"
 
   adminer:
     image: adminer:latest
     container_name: adminer
     restart: always
+    networks:
+      custom_network:
+        ipv4_address: 172.18.0.3
     ports:
-      - '81:8080'
+      - "81:8080"

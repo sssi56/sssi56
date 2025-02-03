@@ -1,5 +1,3 @@
-psql -h 172.18.0.2 -U postgres -p 5432 -d postgres -c "CREATE DATABASE cm6;"
-
 pg_dump -h 172.28.123.16 -U postgres -d cm6 \
  -t so_department \
  -t department \
