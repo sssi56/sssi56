@@ -1,4 +1,8 @@
- pg_dump -h 172.28.123.16 -U postgres -d cm6 \
+psql -h 172.18.0.2 -U postgres -p 5432 -d cm6 -c "DROP SCHEMA public CASCADE;"
+psql -h 172.18.0.2 -U postgres -p 5432 -d cm6 -c "VACUUM FULL VERBOSE ANALYZE;"
+psql -h 172.18.0.2 -U postgres -p 5432 -d cm6 -c "CREATE SCHEMA public;"
+
+pg_dump -h 172.28.123.16 -U postgres -d cm6 \
  -t so_department \
  -t department \
  -t SO_Appointment \
@@ -48,7 +52,7 @@ WHERE 1 = 1
   AND so_dep.hierparent = 2
 ORDER BY so_dep.id ASC;";
 
-psql -h 172.18.0.2 -U postgres -p 5432 -d cm6 -c "CREATE TABLE sotr_spisok AS
+psql -h 172.18.0.2 -U postgres -p 5432 -d cm6 -c "CREATE TABLE sotr_spisok_cit AS
 WITH RECURSIVE recursive_data AS (
  				SELECT
  					so_u.id AS head_id,
@@ -130,7 +134,7 @@ WITH RECURSIVE recursive_data AS (
  						 INNER JOIN recursive_data rd ON rd.head_id = head_units_data.parent_unit_id
  				WHERE 1 = 1
  				  -- в реальности количество уровней не превышает 4-5, ограничим их на случай возможного зацикливания
- 				  AND rd.level < 8
+ 				  AND rd.level < 2
  			),
  ----------------------------------------------------------
  		    recursive_data2 AS (
@@ -215,7 +219,7 @@ WITH RECURSIVE recursive_data AS (
  						 INNER JOIN recursive_data2 rd2 ON rd2.head_id = head_units_data2.parent_unit_id
  				WHERE 1 = 1
  				  -- в реальности количество уровней не превышает 4-5, ограничим их на случай возможного зацикливания
- 				  AND rd2.level1 < 8
+ 				  AND rd2.level1 < 0
  			)
  ----------------------------------------------------------
  			SELECT
