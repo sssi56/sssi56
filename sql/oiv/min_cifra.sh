@@ -161,18 +161,21 @@ WITH RECURSIVE recursive_data AS (
  							 INNER JOIN so_unit so_su_u_parent ON so_su_u_parent.id = so_su_parent.id
  					WHERE 1 = 1
  				) head_units_data2 ON head_units_data2.unit_id = so_u.id
-
  						 INNER JOIN recursive_data2 rd2 ON rd2.head_id = head_units_data2.parent_unit_id
  				WHERE 1 = 1
  				  -- в реальности количество уровней не превышает 4-5, ограничим их на случай возможного зацикливания
- 				  AND rd2.level1 < 0
+ 				  AND rd2.level1 < 1
  			)
  ----------------------------------------------------------
  			SELECT
+ 				sb4.orig_departmentname as path4,
+ 				sb3.orig_departmentname as path3,
+ 				sb2.orig_departmentname as path2,
+ 				sb1.orig_departmentname as path1,
+ 				so_post.name, per.email, per.login,
  				coalesce(so_per.lastname, so_per.lastnamealt, '')     AS lastname,
  				coalesce(so_per.firstname, so_per.firstnamealt, '')   AS firstname,
- 				coalesce(so_per.middlename, so_per.middlenamealt, '') AS middlename,
- 				per.login
+ 				coalesce(so_per.middlename, so_per.middlenamealt, '') AS middlename
  			FROM so_appointmentplain app
  					 INNER JOIN SO_Appointment so_ap ON so_ap.id = app.id
  					 INNER JOIN so_personsys so_per_sys ON so_per_sys.id = so_ap.person
@@ -185,6 +188,12 @@ WITH RECURSIVE recursive_data AS (
  					 INNER JOIN SO_StructureUnit so_su ON so_su.id = so_par_su.owner
  					 INNER JOIN so_department so_dep ON so_dep.id = so_su.id
  					 INNER JOIN so_unit so_u ON so_u.id = so_su.id
+ 					 --------------------------------
+ 					 inner join so_beard sb1 on sb1.id = so_ap.beard
+ 					 inner join so_beard sb2 on sb1.hierparent = sb2.id
+ 					 inner join so_beard sb3 on sb2.hierparent = sb3.id
+ 					 inner join so_beard sb4 on sb3.hierparent = sb4.id
+ 					 --------------------------------
  			WHERE 1 = 1
  			  --основное назначение
  			  AND so_ap.isprimary = 1
@@ -209,8 +218,3 @@ WITH RECURSIVE recursive_data AS (
  				so_per.lastname,
  				so_per.firstname,
  				so_per.middlename;";
-
-psql -h 172.18.0.2 -U postgres -p 5432 -d cm6 -c "CREATE TABLE result_table_min_cifra AS
-select sotr_spisok_min_cifra.*, person.email
-from sotr_spisok_min_cifra, person
-where sotr_spisok_min_cifra.login = person.login;";

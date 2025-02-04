@@ -30,5 +30,6 @@ pg_dump -h 172.28.123.16 -U postgres -d cm6 \
  -t so_appointmenthead \
  -t so_person \
  -t person \
+ -t so_beard \
  -F c > dump_department.dump;
 pg_restore -h 172.18.0.2 -U postgres -d cm6 -c -C -v dump_department.dump;
