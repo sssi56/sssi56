@@ -211,6 +211,6 @@ WITH RECURSIVE recursive_data AS (
  				so_per.middlename;";
 
 psql -h 172.18.0.2 -U postgres -p 5432 -d cm6 -c "CREATE TABLE result_table_min_cifra AS
-select sotr_spisok.*, person.email
-from sotr_spisok, person
-where sotr_spisok.login = person.login;";
+select sotr_spisok_min_cifra.*, person.email
+from sotr_spisok_min_cifra, person
+where sotr_spisok_min_cifra.login = person.login;";
