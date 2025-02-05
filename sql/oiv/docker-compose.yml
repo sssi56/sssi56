@@ -21,12 +21,27 @@ services:
     ports:
       - "5433:5432"
 
-  adminer:
-    image: adminer:latest
-    container_name: adminer
+  run:
+    image: debian:latest
+    container_name: run
     restart: always
     networks:
       custom_network:
         ipv4_address: 172.18.0.3
-    ports:
-      - "81:8080"
+    command: |
+      sh -c "
+        # Добавляем строки в /etc/environment
+        if [ -f /etc/environment ]; then
+          sed -i '/^http_proxy/d' /etc/environment || true
+          echo 'http_proxy="http://172.16.1.10:3128"' >> /etc/environment
+          sed -i '/^https_proxy/d' /etc/environment || true
+          echo 'https_proxy="http://172.16.1.10:3128"' >> /etc/environment
+        fi
+        # Добавляем строки в /etc/apt/apt.conf.d/05proxy
+        if [ -f /etc/apt/apt.conf.d/05proxy ]; then
+          sed -i '/^http_proxy/d' /etc/apt/apt.conf.d/05proxy || true
+          echo 'Acquire::http::Proxy "http://172.16.1.10:3128";' >> /etc/apt/apt.conf.d/05proxy
+        fi
+        # Переводим контейнер в спящий режим, чтобы он не завершался
+        sleep infinity
+      "
