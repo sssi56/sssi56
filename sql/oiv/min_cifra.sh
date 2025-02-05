@@ -1,4 +1,4 @@
-psql -h 172.18.0.2 -U postgres -p 5432 -d cm6 -c "CREATE TABLE sotr_spisok_min_cifra AS
+psql -h 172.18.0.2 -U postgres -p 5432 -d cm6 -c "CREATE TABLE sotr_spisok AS
 WITH RECURSIVE recursive_data AS (
  				SELECT
  					so_u.id AS head_id,
@@ -7,7 +7,12 @@ WITH RECURSIVE recursive_data AS (
  						 INNER JOIN SO_StructureUnit so_su ON so_su.id = so_dep.id
  						 INNER JOIN so_unit so_u ON so_u.id = so_su.id
  				WHERE 1 = 1
- 					AND so_dep.id = 233
+ 					AND ((so_dep.id = 3) or (so_dep.id = 71) or (so_dep.id = 147) or (so_dep.id = 198) or (so_dep.id = 233) or
+ 					(so_dep.id = 254)	or (so_dep.id = 290) or (so_dep.id = 293) or (so_dep.id = 345) or (so_dep.id = 363) or
+ 					(so_dep.id = 372) or (so_dep.id = 379) or (so_dep.id = 389) or (so_dep.id = 408) or (so_dep.id = 692) or
+ 					(so_dep.id = 705) or (so_dep.id = 715) or (so_dep.id = 722) or (so_dep.id = 738) or (so_dep.id = 804) or
+ 					(so_dep.id = 807) or (so_dep.id = 808) or (so_dep.id = 820) or (so_dep.id = 851) or (so_dep.id = 854) or
+ 					(so_dep.id = 916) or (so_dep.id = 24399) or (so_dep.id = 24420) or (so_dep.id = 24618) or (so_dep.id = 46511))
  				UNION
  				SELECT
  					so_u.id      AS head_id,
